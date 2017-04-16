@@ -57,7 +57,7 @@
 
 	var Main = __webpack_require__(216);
 	var NumConverter = __webpack_require__(218);
-	var About = __webpack_require__(219);
+	var About = __webpack_require__(220);
 
 	ReactDOM.render(React.createElement(
 	  Router,
@@ -24864,7 +24864,7 @@
 	      React.createElement(
 	        'h2',
 	        null,
-	        'Main Component'
+	        'Convertidor'
 	      ),
 	      this.props.children
 	    );
@@ -24900,7 +24900,7 @@
 	      React.createElement(
 	        IndexLink,
 	        { to: '/', activeClassName: 'active', activeStyle: { fontWeight: 'bold' } },
-	        'Hola Mundo'
+	        'Convertidor'
 	      ),
 	      React.createElement(
 	        Link,
@@ -24920,34 +24920,160 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
+	var NumberForm = __webpack_require__(219);
 
 	var NumConverter = React.createClass({
-	  displayName: 'NumConverter',
+	    displayName: 'NumConverter',
 
-	  getInitialState: function getInitialState() {
-	    return {
-	      isLoading: false
-	    };
-	  },
+	    getInitialState: function getInitialState() {
+	        return {
+	            decValue: 0,
+	            binValue: 0,
+	            hexValue: 0,
+	            octValue: 0
+	        };
+	    },
 
-	  render: function render() {
+	    convertDecNum: function convertDecNum(num, base) {
+	        var result = [];
+	        var i = num;
+	        var hex_dictionary = { 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F" };
 
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Hola Mundo'
-	      )
-	    );
-	  }
+	        while (i >= 1) {
+	            var digit = i % base;
+
+	            if (base == 16 && digit > 9) {
+	                digit = hex_dictionary[digit];
+	            }
+
+	            result.unshift(digit);
+	            i = Math.floor(i / base);
+	        }
+	        return result.join('');
+	    },
+
+	    convertToDec: function convertToDec(num, base) {
+	        var result = 0;
+	        var digits = num.split('').reverse();
+
+	        digits.forEach(function (number, index) {
+	            result += number * Math.pow(base, index);
+	        });
+	        return result;
+	    },
+
+	    handleDecChange: function handleDecChange(e) {
+	        var that = this;
+	        that.setState({
+	            decValue: e,
+	            binValue: that.convertDecNum(e, 2),
+	            hexValue: that.convertDecNum(e, 16),
+	            octValue: that.convertDecNum(e, 8)
+	        });
+	    },
+
+	    handleBinChange: function handleBinChange(e) {
+	        var that = this;
+	        that.setState({
+	            decValue: e,
+	            binValue: e,
+	            hexValue: e,
+	            octValue: e
+	        });
+	    },
+
+	    handleHexChange: function handleHexChange(e) {
+	        var that = this;
+	        that.setState({
+	            decValue: e,
+	            binValue: that.convertDecNum(e, 2),
+	            hexValue: e,
+	            octValue: e
+	        });
+	    },
+
+	    handleOctChange: function handleOctChange(e) {
+	        var that = this;
+	        that.setState({
+	            decValue: e,
+	            binValue: that.convertDecNum(e, 2),
+	            hexValue: e,
+	            octValue: e
+	        });
+	    },
+
+	    render: function render() {
+	        var _state = this.state,
+	            decValue = _state.decValue,
+	            binValue = _state.binValue,
+	            hexValue = _state.hexValue,
+	            octValue = _state.octValue;
+
+	        return React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	                'h3',
+	                null,
+	                'Ingrese el numero en cualquiera de las cajas'
+	            ),
+	            React.createElement(NumberForm, { numFormat: 'Decimal', Number: decValue, onValueChange: this.handleDecChange }),
+	            React.createElement(NumberForm, { numFormat: 'Binary', Number: binValue, onValueChange: this.handleBinChange }),
+	            React.createElement(NumberForm, { numFormat: 'Hexadecimal', Number: hexValue, onValueChange: this.handleHexChange }),
+	            React.createElement(NumberForm, { numFormat: 'Octal', Number: octValue, onValueChange: this.handleOctChange })
+	        );
+	    }
 	});
 
 	module.exports = NumConverter;
 
 /***/ },
 /* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var NumberForm = React.createClass({
+	    displayName: 'NumberForm',
+
+	    getInitialState: function getInitialState() {
+	        return {
+	            numFormat: this.props.numFormat,
+	            Number: this.props.Number
+	        };
+	    },
+
+	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	        this.setState({ Number: nextProps.Number });
+	    },
+
+
+	    handleNumberChange: function handleNumberChange(e) {
+	        var that = this;
+	        console.log(e.target.value);
+	        that.props.onValueChange(e.target.value); //Issue
+	    },
+
+	    render: function render() {
+	        var _state = this.state,
+	            numFormat = _state.numFormat,
+	            Number = _state.Number;
+
+	        return React.createElement(
+	            'h3',
+	            null,
+	            React.createElement('input', { onInput: this.handleNumberChange, value: Number }),
+	            Number
+	        );
+	    }
+	});
+
+	module.exports = NumberForm;
+
+/***/ },
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
