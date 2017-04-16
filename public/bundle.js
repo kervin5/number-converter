@@ -24952,54 +24952,13 @@
 	        return result.join('');
 	    },
 
-	    convertToDec: function convertToDec(num, base) {
-	        var result = 0;
-	        var digits = num.split('').reverse();
-	        var hex_dictionary = { 10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F" };
-
-	        digits.forEach(function (number, index) {
-	            result += number * Math.pow(base, index);
-	        });
-	        return result;
-	    },
-
-	    handleDecChange: function handleDecChange(e) {
+	    handleNumChange: function handleNumChange(e) {
 	        var that = this;
 	        that.setState({
 	            decValue: e,
 	            binValue: that.convertDecToBase(e, 2),
 	            hexValue: that.convertDecToBase(e, 16),
 	            octValue: that.convertDecToBase(e, 8)
-	        });
-	    },
-
-	    handleBinChange: function handleBinChange(e) {
-	        var that = this;
-	        that.setState({
-	            decValue: that.convertToDec(e, 2),
-	            binValue: e,
-	            hexValue: e,
-	            octValue: e
-	        });
-	    },
-
-	    handleHexChange: function handleHexChange(e) {
-	        var that = this;
-	        that.setState({
-	            decValue: e,
-	            binValue: that.convertDecToBase(e, 2),
-	            hexValue: e,
-	            octValue: e
-	        });
-	    },
-
-	    handleOctChange: function handleOctChange(e) {
-	        var that = this;
-	        that.setState({
-	            decValue: e,
-	            binValue: that.convertDecToBase(e, 2),
-	            hexValue: e,
-	            octValue: e
 	        });
 	    },
 
@@ -25018,10 +24977,10 @@
 	                null,
 	                'Ingrese el numero en cualquiera de las cajas'
 	            ),
-	            React.createElement(NumberForm, { numFormat: 'Decimal', Number: decValue, onValueChange: this.handleDecChange }),
-	            React.createElement(NumberForm, { numFormat: 'Binary', Number: binValue, onValueChange: this.handleBinChange }),
-	            React.createElement(NumberForm, { numFormat: 'Hexadecimal', Number: hexValue, onValueChange: this.handleHexChange }),
-	            React.createElement(NumberForm, { numFormat: 'Octal', Number: octValue, onValueChange: this.handleOctChange })
+	            React.createElement(NumberForm, { numFormat: 'decimal', Number: decValue, onValueChange: this.handleNumChange }),
+	            React.createElement(NumberForm, { numFormat: 'binary', Number: binValue, onValueChange: this.handleNumChange }),
+	            React.createElement(NumberForm, { numFormat: 'hexadecimal', Number: hexValue, onValueChange: this.handleNumChange }),
+	            React.createElement(NumberForm, { numFormat: 'octal', Number: octValue, onValueChange: this.handleNumChange })
 	        );
 	    }
 	});
@@ -25032,18 +24991,41 @@
 /* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	var React = __webpack_require__(1);
 
 	var NumberForm = React.createClass({
-	    displayName: 'NumberForm',
+	    displayName: "NumberForm",
+
+	    validationRules: {
+	        binary: { type: "text", pattern: "[0-1]" },
+	        decimal: { type: "number", pattern: "[0-9]" },
+	        hexadecimal: { type: "text", pattern: "[0-9A-Z]" },
+	        octal: { type: "text", pattern: "[0-7]" }
+	    },
 
 	    getInitialState: function getInitialState() {
 	        return {
 	            numFormat: this.props.numFormat,
-	            Number: this.props.Number
+	            Number: this.props.Number,
+	            Validation: this.validationRules[this.props.numFormat]
 	        };
+	    },
+
+	    convertToDec: function convertToDec(num, base) {
+	        var result = 0;
+	        var digits = num.split('').reverse();
+	        var hex_dictionary = { "A": 10, "B": 11, "C": 12, "D": 13, "E": 14, "F": 15 };
+
+	        digits.forEach(function (digit, index) {
+	            if (base == 16 && isNaN(digit)) {
+	                digit = hex_dictionary[digit.toUpperCase()];
+	            }
+	            result += digit * Math.pow(base, index);
+	        });
+	        console.log(result);
+	        return result;
 	    },
 
 	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
@@ -25053,20 +25035,22 @@
 
 	    handleNumberChange: function handleNumberChange(e) {
 	        var that = this;
-	        console.log(e.target.value);
-	        that.props.onValueChange(e.target.value); //Issue
+	        var base_dictionary = { 'decimal': 10, 'binary': 2, 'hexadecimal': 16, 'octal': 8 };
+	        var base = base_dictionary[that.state.numFormat];
+	        that.props.onValueChange(that.convertToDec(e.target.value, base));
 	    },
 
 	    render: function render() {
 	        var _state = this.state,
 	            numFormat = _state.numFormat,
-	            Number = _state.Number;
+	            Number = _state.Number,
+	            Validation = _state.Validation;
 
 	        return React.createElement(
-	            'h3',
+	            "h3",
 	            null,
-	            React.createElement('input', { onInput: this.handleNumberChange, value: Number }),
-	            Number
+	            React.createElement("input", { type: Validation.type, pattern: Validation.pattern, onInput: this.handleNumberChange, value: Number }),
+	            numFormat
 	        );
 	    }
 	});
