@@ -11,7 +11,7 @@ var NumConverter = React.createClass({
         }
     },
 
-    convertDecNum: function (num, base) {
+    convertDecToBase: function (num, base) {
         var result = [];
         var i = num;
         let hex_dictionary = {10 : "A", 11 : "B", 12 : "C", 13 : "D", 14 : "E", 15 : "F"};
@@ -32,6 +32,7 @@ var NumConverter = React.createClass({
     convertToDec: function (num, base) {
         var result = 0;
         var digits = num.split('').reverse();
+        let hex_dictionary = {10 : "A", 11 : "B", 12 : "C", 13 : "D", 14 : "E", 15 : "F"};
 
         digits.forEach(function(number, index){
           result += number * Math.pow(base,index);
@@ -43,16 +44,16 @@ var NumConverter = React.createClass({
         var that = this;
         that.setState({
             decValue: e,
-            binValue: that.convertDecNum(e, 2),
-            hexValue: that.convertDecNum(e, 16),
-            octValue: that.convertDecNum(e, 8),
+            binValue: that.convertDecToBase(e, 2),
+            hexValue: that.convertDecToBase(e, 16),
+            octValue: that.convertDecToBase(e, 8),
         });
     },
 
     handleBinChange: function (e) {
         var that = this;
         that.setState({
-            decValue: e,
+            decValue: that.convertToDec(e,2),
             binValue: e,
             hexValue: e,
             octValue: e,
@@ -63,7 +64,7 @@ var NumConverter = React.createClass({
         var that = this;
         that.setState({
             decValue: e,
-            binValue: that.convertDecNum(e , 2),
+            binValue: that.convertDecToBase(e, 2),
             hexValue: e,
             octValue: e,
         });
@@ -73,7 +74,7 @@ var NumConverter = React.createClass({
         var that = this;
         that.setState({
             decValue: e,
-            binValue: that.convertDecNum(e, 2),
+            binValue: that.convertDecToBase(e, 2),
             hexValue: e,
             octValue: e,
         });
