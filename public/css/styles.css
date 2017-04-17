@@ -1,4 +1,4 @@
-*, body, html, h1, h2, h3, h4, h5, a, p {
+*, body, html, h1, h2, h3, h4, h5, a, p, table, td, tr {
     font-family: 'Roboto', sans-serif;
 }
 
@@ -34,7 +34,7 @@
 
 @media (max-width: 500px) {
     .form-control {
-        font-size: 1.2em;
+        font-size: 1.2em ;
         height: 60px;
     }
 }
@@ -43,3 +43,9 @@
     box-shadow: none;
     border: 0px;
 }
+
+.table, th,td,tr,tbody {
+    background-color: white;
+    border-radius: 5px;
+}
+
