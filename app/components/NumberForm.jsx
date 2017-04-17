@@ -1,5 +1,6 @@
 var React = require('react');
 
+
 var NumberForm = React.createClass({
     validationRules: {
         binary: {type: "text", pattern: "[0-1]"},
@@ -27,7 +28,6 @@ var NumberForm = React.createClass({
             }
             result += digit * Math.pow(base,index);
         });
-        console.log(result);
         return result;
     },
 
@@ -37,19 +37,23 @@ var NumberForm = React.createClass({
 
     handleNumberChange: function (e) {
         var that = this;
-        let base_dictionary = {'decimal':10, 'binary':2, 'hexadecimal':16, 'octal':8};
+        let base_dictionary = {'decimal': 10, 'binary': 2, 'hexadecimal': 16, 'octal': 8};
         var base = base_dictionary[that.state.numFormat];
         that.props.onValueChange(that.convertToDec(e.target.value, base));
+
     },
 
 
     render: function () {
         var {numFormat, Number,Validation} = this.state;
+
         return(
-            <h3>
-                <input type={Validation.type} pattern={Validation.pattern} onInput={this.handleNumberChange} value={Number}/>
-                {numFormat}
-            </h3>
+
+                <div className="number-form form-group">
+                    <h3>{numFormat}</h3>
+                    <input name="" className="form-control" type={Validation.type} pattern={Validation.pattern} onInput={this.handleNumberChange} value={Number}/>
+                </div>
+
         )
     }
 });

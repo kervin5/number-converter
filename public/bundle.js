@@ -57,7 +57,7 @@
 
 	var Main = __webpack_require__(216);
 	var NumConverter = __webpack_require__(218);
-	var About = __webpack_require__(220);
+	var About = __webpack_require__(221);
 
 	ReactDOM.render(React.createElement(
 	  Router,
@@ -24893,11 +24893,6 @@
 	      'div',
 	      null,
 	      React.createElement(
-	        'h2',
-	        null,
-	        'Nav Component'
-	      ),
-	      React.createElement(
 	        IndexLink,
 	        { to: '/', activeClassName: 'active', activeStyle: { fontWeight: 'bold' } },
 	        'Convertidor'
@@ -24921,6 +24916,7 @@
 
 	var React = __webpack_require__(1);
 	var NumberForm = __webpack_require__(219);
+	var BinTable = __webpack_require__(220);
 
 	var NumConverter = React.createClass({
 	    displayName: 'NumConverter',
@@ -24977,10 +24973,28 @@
 	                null,
 	                'Ingrese el numero en cualquiera de las cajas'
 	            ),
-	            React.createElement(NumberForm, { numFormat: 'decimal', Number: decValue, onValueChange: this.handleNumChange }),
-	            React.createElement(NumberForm, { numFormat: 'binary', Number: binValue, onValueChange: this.handleNumChange }),
-	            React.createElement(NumberForm, { numFormat: 'hexadecimal', Number: hexValue, onValueChange: this.handleNumChange }),
-	            React.createElement(NumberForm, { numFormat: 'octal', Number: octValue, onValueChange: this.handleNumChange })
+	            React.createElement(
+	                'div',
+	                { className: 'block-1 container' },
+	                React.createElement(NumberForm, { numFormat: 'decimal', Number: decValue, onValueChange: this.handleNumChange })
+	            ),
+	            React.createElement(
+	                'div',
+	                { className: 'block-2 container' },
+	                React.createElement(NumberForm, { className: 'bg-color-2', numFormat: 'binary', Number: binValue, onValueChange: this.handleNumChange })
+	            ),
+	            React.createElement(
+	                'div',
+	                { className: 'block-3 container' },
+	                React.createElement(NumberForm, { className: 'bg-color-3', numFormat: 'hexadecimal', Number: hexValue, onValueChange: this.handleNumChange }),
+	                React.createElement(BinTable, { numFormat: 'hexadecimal', Number: hexValue, binNumber: binValue })
+	            ),
+	            React.createElement(
+	                'div',
+	                { className: 'block-4 container' },
+	                React.createElement(NumberForm, { className: 'bg-color-4', numFormat: 'octal', Number: octValue, onValueChange: this.handleNumChange }),
+	                React.createElement(BinTable, { numFormat: 'octal', Number: octValue, binNumber: binValue })
+	            )
 	        );
 	    }
 	});
@@ -25024,7 +25038,6 @@
 	            }
 	            result += digit * Math.pow(base, index);
 	        });
-	        console.log(result);
 	        return result;
 	    },
 
@@ -25046,11 +25059,16 @@
 	            Number = _state.Number,
 	            Validation = _state.Validation;
 
+
 	        return React.createElement(
-	            "h3",
-	            null,
-	            React.createElement("input", { type: Validation.type, pattern: Validation.pattern, onInput: this.handleNumberChange, value: Number }),
-	            numFormat
+	            "div",
+	            { className: "number-form form-group" },
+	            React.createElement(
+	                "h3",
+	                null,
+	                numFormat
+	            ),
+	            React.createElement("input", { name: "", className: "form-control", type: Validation.type, pattern: Validation.pattern, onInput: this.handleNumberChange, value: Number })
 	        );
 	    }
 	});
@@ -25059,6 +25077,112 @@
 
 /***/ },
 /* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var BinTable = React.createClass({
+	    displayName: 'BinTable',
+
+
+	    getInitialState: function getInitialState() {
+	        return {
+	            numFormat: this.props.numFormat,
+	            Number: this.props.Number.toString(),
+	            binaryValue: this.props.binNumber.toString()
+	        };
+	    },
+
+	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	        this.setState({ Number: nextProps.Number });
+	        this.setState({ binaryValue: nextProps.binNumber });
+	    },
+
+
+	    chunkBinary: function chunkBinary(num, numFormat) {
+	        var splitDictionary = { hexadecimal: 4, octal: 3 };
+	        var grouping = splitDictionary[numFormat];
+	        var reversedBinary = num.toString().split('').reverse().join('');
+
+	        var formatedBin = reversedBinary.match(RegExp('.{1,' + grouping + '}', 'g')).reverse().map(function (digits) {
+	            digits += new Array(grouping - digits.length + 1).join('0');
+	            return digits.split('').reverse().join(' ');
+	        });
+
+	        return formatedBin;
+	    },
+
+	    render: function render() {
+	        var _state = this.state,
+	            Number = _state.Number,
+	            binaryValue = _state.binaryValue,
+	            numFormat = _state.numFormat;
+
+	        var binaryColumns;
+
+	        var digitsColumns = Number.split('').map(function (digit) {
+	            return React.createElement(
+	                'td',
+	                null,
+	                digit
+	            );
+	        });
+
+	        if (binaryValue) {
+	            binaryColumns = this.chunkBinary(binaryValue, numFormat).map(function (digits) {
+	                return React.createElement(
+	                    'td',
+	                    null,
+	                    digits
+	                );
+	            });
+	        }
+
+	        return React.createElement(
+	            'table',
+	            { className: 'table table-bordered' },
+	            React.createElement(
+	                'tbody',
+	                null,
+	                React.createElement(
+	                    'tr',
+	                    null,
+	                    React.createElement(
+	                        'td',
+	                        null,
+	                        React.createElement(
+	                            'strong',
+	                            null,
+	                            'Digits'
+	                        )
+	                    ),
+	                    digitsColumns
+	                ),
+	                React.createElement(
+	                    'tr',
+	                    null,
+	                    React.createElement(
+	                        'td',
+	                        null,
+	                        React.createElement(
+	                            'strong',
+	                            null,
+	                            'Binary'
+	                        )
+	                    ),
+	                    binaryColumns
+	                )
+	            )
+	        );
+	    }
+	});
+
+	module.exports = BinTable;
+
+/***/ },
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

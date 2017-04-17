@@ -1,0 +1,45 @@
+*, body, html, h1, h2, h3, h4, h5, a, p {
+    font-family: 'Roboto', sans-serif;
+}
+
+.number-form {
+    padding-top: 5%;
+}
+
+.block-1 {
+    background-color: #FFA000;
+}
+
+.block-2 {
+    background-color: #FFC107;
+}
+
+.block-3 {
+    background-color: #FF5252;
+}
+
+.block-4 {
+    background-color: #00BCD4;
+}
+
+.form-control {
+    font-size: 3em;
+    height: 60px;
+}
+
+.number-form h3 {
+    color: white;
+    text-transform: capitalize;
+}
+
+@media (max-width: 500px) {
+    .form-control {
+        font-size: 1.2em;
+        height: 60px;
+    }
+}
+
+.form-control {
+    box-shadow: none;
+    border: 0px;
+}

@@ -13,6 +13,7 @@ module.exports = {
             About: 'app/components/About.jsx',
             NumConverter: 'app/components/NumConverter.jsx',
             NumberForm: 'app/components/NumberForm.jsx',
+            BinTable: 'app/components/BinTable.jsx'
         },
         extensions: ['','.js','.jsx']
     },
